@@ -1,0 +1,57 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/attack_controller.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/enemy_spawner.gd" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/enemy.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://scenes/level_up_screen.tscn" id="7"]
+[ext_resource type="PackedScene" path="res://scenes/run_end_screen.tscn" id="8"]
+[ext_resource type="PackedScene" path="res://scenes/damage_number.tscn" id="9"]
+[ext_resource type="PackedScene" path="res://scenes/meta_shop.tscn" id="10"]
+[ext_resource type="PackedScene" path="res://scenes/pause_menu.tscn" id="11"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Arena" type="ColorRect" parent="."]
+offset_right = 800.0
+offset_bottom = 500.0
+color = Color(0.133, 0.173, 0.122, 1)
+
+[node name="Player" type="Node2D" parent="."]
+position = Vector2(400.0, 250.0)
+script = ExtResource("2")
+
+[node name="Visual" type="ColorRect" parent="Player"]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+color = Color(0.22, 0.78, 0.35, 1)
+
+[node name="AttackController" type="Node2D" parent="Player"]
+script = ExtResource("3")
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="EnemySpawner" type="Node2D" parent="."]
+script = ExtResource("4")
+
+[node name="Projectiles" type="Node2D" parent="."]
+
+[node name="DamageNumbers" type="Node2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(400.0, 250.0)
+
+[node name="HUD" parent="." instance=ExtResource("6")]
+
+[node name="LevelUpScreen" parent="." instance=ExtResource("7")]
+
+[node name="RunEndScreen" parent="." instance=ExtResource("8")]
+
+[node name="MetaShop" parent="." instance=ExtResource("10")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("11")]

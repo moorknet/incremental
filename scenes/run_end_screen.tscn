@@ -1,0 +1,66 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/run_end_screen.gd" id="1"]
+
+[node name="RunEndScreen" type="CanvasLayer"]
+script = ExtResource("1")
+process_mode = 3
+layer = 20
+
+[node name="Overlay" type="ColorRect" parent="."]
+color = Color(0.0, 0.0, 0.0, 0.82)
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panel" type="VBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -195.0
+offset_right = 220.0
+offset_bottom = 195.0
+alignment = 1
+theme_override_constants/separation = 14
+
+[node name="TitleLabel" type="Label" parent="Panel"]
+text = "RUN OVER"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 36
+
+[node name="TimeLabel" type="Label" parent="Panel"]
+text = "Time  0:00.0"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 17
+
+[node name="LevelLabel" type="Label" parent="Panel"]
+text = "Level Reached  1"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 17
+
+[node name="KillsLabel" type="Label" parent="Panel"]
+text = "Kills  0"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 17
+
+[node name="DamageLabel" type="Label" parent="Panel"]
+text = "Damage Dealt  0"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 17
+
+[node name="MetaLabel" type="Label" parent="Panel"]
+text = "Meta Earned  +0"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 17
+
+[node name="TotalMetaLabel" type="Label" parent="Panel"]
+text = "Total Meta  0"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+modulate = Color(0.8, 0.8, 0.8, 1)
+
+[node name="PlayAgainButton" type="Button" parent="Panel"]
+custom_minimum_size = Vector2(200.0, 44.0)
+text = "Play Again"
+theme_override_font_sizes/font_size = 20

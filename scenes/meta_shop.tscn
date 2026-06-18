@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/meta_shop.gd" id="1"]
+
+[node name="MetaShop" type="CanvasLayer"]
+script = ExtResource("1")
+process_mode = 3
+layer = 15
+
+[node name="Overlay" type="ColorRect" parent="."]
+color = Color(0.0, 0.0, 0.0, 0.88)
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="MainPanel" type="PanelContainer" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -310.0
+offset_top = -252.0
+offset_right = 310.0
+offset_bottom = 252.0
+
+[node name="VBox" type="VBoxContainer" parent="MainPanel"]
+theme_override_constants/separation = 6
+
+[node name="Header" type="HBoxContainer" parent="MainPanel/VBox"]
+theme_override_constants/separation = 0
+
+[node name="TitleLabel" type="Label" parent="MainPanel/VBox/Header"]
+size_flags_horizontal = 3
+text = "META SHOP"
+theme_override_font_sizes/font_size = 24
+
+[node name="CurrencyLabel" type="Label" parent="MainPanel/VBox/Header"]
+text = "⬡ 0"
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="Sep1" type="HSeparator" parent="MainPanel/VBox"]
+
+[node name="Scroll" type="ScrollContainer" parent="MainPanel/VBox"]
+custom_minimum_size = Vector2(0.0, 336.0)
+size_flags_vertical = 3
+
+[node name="UpgradeList" type="VBoxContainer" parent="MainPanel/VBox/Scroll"]
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="Sep2" type="HSeparator" parent="MainPanel/VBox"]
+
+[node name="ResetButton" type="Button" parent="MainPanel/VBox"]
+custom_minimum_size = Vector2(0.0, 30.0)
+text = "↺  Reset All Upgrades (refunds meta)"
+theme_override_font_sizes/font_size = 12
+modulate = Color(1.0, 0.55, 0.55, 1.0)
+
+[node name="StartRunButton" type="Button" parent="MainPanel/VBox"]
+custom_minimum_size = Vector2(0.0, 42.0)
+text = "Start Run"
+theme_override_font_sizes/font_size = 18
