@@ -57,6 +57,11 @@ custom_minimum_size = Vector2(0.0, 30.0)
 text = "↺  Reset All Upgrades (refunds meta)"
 theme_override_font_sizes/font_size = 12
 
+[node name="NewGameButton" type="Button" parent="MainPanel/VBox"]
+custom_minimum_size = Vector2(0.0, 30.0)
+text = "✕  New Game  (wipes all meta & upgrades)"
+theme_override_font_sizes/font_size = 12
+
 [node name="StartRunButton" type="Button" parent="MainPanel/VBox"]
 custom_minimum_size = Vector2(0.0, 44.0)
 text = "Start Run"

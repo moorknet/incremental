@@ -2,18 +2,22 @@ extends CanvasLayer
 
 @onready var currency_label: Label = $MainPanel/VBox/Header/CurrencyLabel
 @onready var upgrade_list: VBoxContainer = $MainPanel/VBox/Scroll/UpgradeList
-@onready var reset_btn: Button = $MainPanel/VBox/ResetButton
+@onready var reset_btn: Button     = $MainPanel/VBox/ResetButton
+@onready var new_game_btn: Button  = $MainPanel/VBox/NewGameButton
 @onready var start_run_btn: Button = $MainPanel/VBox/StartRunButton
 @onready var main_panel: PanelContainer = $MainPanel
 
 var _rows: Array = []
+var _confirm: ConfirmationDialog
 
 func _ready() -> void:
 	visible = false
 	start_run_btn.pressed.connect(_on_start_run)
 	reset_btn.pressed.connect(_on_reset)
+	new_game_btn.pressed.connect(_on_new_game)
 	_build_upgrade_list()
 	call_deferred("_apply_styles")
+	_build_confirm_dialog()
 
 func _apply_styles() -> void:
 	# Main panel — white card
@@ -43,7 +47,7 @@ func _apply_styles() -> void:
 	primary_hover.bg_color = Color("#178670")
 	start_run_btn.add_theme_stylebox_override("hover", primary_hover)
 
-	# Reset — danger (ghost rose)
+	# Reset and New Game — danger (ghost rose)
 	var reset_normal := StyleBoxFlat.new()
 	reset_normal.bg_color = Color(0, 0, 0, 0)
 	reset_normal.border_width_left   = 1
@@ -54,6 +58,11 @@ func _apply_styles() -> void:
 	reset_normal.set_corner_radius_all(8)
 	reset_btn.add_theme_stylebox_override("normal", reset_normal)
 	reset_btn.add_theme_color_override("font_color", Color("#D94F6E"))
+
+	var newgame_sb := reset_normal.duplicate() as StyleBoxFlat
+	newgame_sb.border_color = Color(0.851, 0.310, 0.431, 0.80)
+	new_game_btn.add_theme_stylebox_override("normal", newgame_sb)
+	new_game_btn.add_theme_color_override("font_color", Color("#D94F6E"))
 
 func open() -> void:
 	_refresh()
@@ -152,6 +161,20 @@ func _on_buy(upgrade: Dictionary) -> void:
 		return
 	upgrade.apply.call()
 	MetaSave.save()
+	_refresh()
+
+func _build_confirm_dialog() -> void:
+	_confirm = ConfirmationDialog.new()
+	_confirm.title = "New Game"
+	_confirm.dialog_text = "Wipe ALL meta currency and upgrades?\nThis cannot be undone."
+	_confirm.confirmed.connect(_on_new_game_confirmed)
+	add_child(_confirm)
+
+func _on_new_game() -> void:
+	_confirm.popup_centered()
+
+func _on_new_game_confirmed() -> void:
+	MetaSave.reset_save()
 	_refresh()
 
 func _on_reset() -> void:

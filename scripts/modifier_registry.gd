@@ -5,7 +5,7 @@ static func get_pool() -> Array[Modifier]:
 
 	# --- Weapon modifiers ---
 	pool.append(_make(&"sharpen",  "Sharpen",  "Blade sharpened.\n+{v} damage",          1, 3.0,  8.0,  {"damage": 1.0},                     [&"damage"]))
-	pool.append(_make(&"rapid",    "Rapid",    "Faster swing.\n-{v}s cooldown",           1, 0.05, 0.25, {"cooldown": {"op": "sub"}},          [&"speed"]))
+	pool.append(_make(&"swift",    "Swift",    "Faster shots.\n+{v} projectile speed",    1, 60.0, 150.0, {"speed": 1.0},                      [&"speed"]))
 	pool.append(_make(&"split",    "Split",    "Fire one more projectile.",                2, 1.0,  1.0,  {"count": 1.0},                      [&"count"]))
 	pool.append(_make(&"pierce",   "Pierce",   "Pass through one enemy.",                 2, 1.0,  1.0,  {"pierce": 1.0},                     [&"pierce"]))
 	pool.append(_make(&"crit",     "Crit",     "Lucky strike.\n+{v} crit chance",         2, 0.01, 0.15, {"crit_chance": 1.0},                 [&"crit"]))
@@ -19,7 +19,7 @@ static func get_pool() -> Array[Modifier]:
 	# --- Poison ---
 	pool.append(_make_es(&"plague",     "Plague",     "Infectious bite.\nApply {v} poison stacks on hit",     2, 1.0, 3.0, "poison", [&"poison", &"archetype"]))
 	pool.append(_make_contagion())
-	pool.append(_make_es(&"virulence",  "Virulence",  "Amplified toxin.\nApply {v} more poison stacks on hit", 3, 1.0, 2.0, "poison", [&"poison"]))
+	pool.append(_make_outbreak())
 
 	# --- Fire ---
 	pool.append(_make_es(&"ignite",        "Ignite",        "Burning touch.\nApply {v} burn stacks on hit",         2, 1.0, 3.0, "burn", [&"fire", &"archetype"]))
@@ -102,6 +102,13 @@ static func _make_frenzy() -> FrenzyModifier:
 	m.id = &"frenzy"; m.display_name = "Frenzy"
 	m.tier = 3; m.roll_min = 0.01; m.roll_max = 0.03
 	m.tags = [&"speed", &"scaling"]
+	return m
+
+static func _make_outbreak() -> OutbreakModifier:
+	var m := OutbreakModifier.new()
+	m.id = &"outbreak"; m.display_name = "Outbreak"
+	m.tier = 3; m.roll_min = 0.0; m.roll_max = 0.0
+	m.tags = [&"poison", &"onkill"]
 	return m
 
 static func _make_bloodshot() -> BloodshotModifier:
