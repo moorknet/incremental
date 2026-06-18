@@ -26,6 +26,20 @@ var bleed_stacks: int = 0
 var bleed_time_elapsed: float = 0.0
 var _bleed_timer: float = 0.0
 
+# ── Drawing constants — Frostlight Shard (enemy rose triad) ───────────
+const _C_BASE   := Color("#DA5168")
+const _C_LIGHT  := Color("#ED8497")
+const _C_DARK   := Color("#A8324A")
+const _SHADOW_C := Color(0.110, 0.165, 0.243, 0.18)
+
+# Shard facet vertices (32w × 33h) offset -8 up to match old rect centering
+const _SHARD_TOP   := Vector2(0.0,  -25.0)
+const _SHARD_LEFT  := Vector2(-12.0, -9.0)
+const _SHARD_RIGHT := Vector2(12.0,  -9.0)
+const _SHARD_BOT   := Vector2(0.0,    8.0)
+const _SY_TOP      := -25.0
+const _SY_BOT      :=   8.0
+
 func _ready() -> void:
 	add_to_group("enemies")
 	_base_move_speed = move_speed
@@ -49,7 +63,9 @@ func _process(delta: float) -> void:
 	if not GameManager.run_active or hp <= 0.0:
 		return
 	_tick_dots(delta)
-	_update_visual()
+	queue_redraw()
+
+# ── Elemental DoT ──────────────────────────────────────────────────────
 
 func _tick_dots(delta: float) -> void:
 	if poison_stacks > 0:
@@ -62,10 +78,9 @@ func _tick_dots(delta: float) -> void:
 		_burn_timer += delta
 		if _burn_timer >= DOT_INTERVAL:
 			_burn_timer = 0.0
-			# Burning Venom: fire deals 2× to poisoned enemies
 			var burn_mult := 2.0 if poison_stacks > 0 else 1.0
 			take_dot_damage(burn_stacks * (1.5 + MetaSave.burn_power) * burn_mult, "burn")
-			burn_stacks = max(0, burn_stacks - 1)  # fire fades — reapply to sustain
+			burn_stacks = max(0, burn_stacks - 1)
 
 	if bleed_stacks > 0:
 		bleed_time_elapsed += delta
@@ -76,18 +91,15 @@ func _tick_dots(delta: float) -> void:
 			take_dot_damage(bleed_stacks * (1.5 + MetaSave.bleed_power) * ramp, "bleed")
 
 func apply_poison(stacks: int) -> void:
-	# Septic: bleeding targets absorb more poison
 	var mult := 1.5 if bleed_stacks > 0 else 1.0
 	poison_stacks += int(stacks * mult)
 
 func apply_burn(stacks: int) -> void:
-	# Burning Venom: poisoned targets ignite harder
 	var mult := 2 if poison_stacks > 0 else 1
 	burn_stacks += stacks * mult
 
 func apply_cold(stacks: int) -> void:
 	cold_stacks += stacks
-	# 20% slow per stack, capped at 90%; freeze at 3 stacks
 	var slow := minf(cold_stacks * 0.20, 0.9)
 	move_speed = _base_move_speed * (1.0 - slow)
 	if cold_stacks >= 3 and not is_frozen:
@@ -95,7 +107,6 @@ func apply_cold(stacks: int) -> void:
 		move_speed = 0.0
 
 func apply_bleed(stacks: int) -> void:
-	# Frostbleed: cold/frozen targets bleed much harder
 	if is_frozen:
 		bleed_stacks += stacks * 3
 	elif cold_stacks > 0:
@@ -103,12 +114,18 @@ func apply_bleed(stacks: int) -> void:
 	else:
 		bleed_stacks += stacks
 
+# ── Damage & death ────────────────────────────────────────────────────
+
 func take_damage(amount: float, _stats: AttackStats, is_crit: bool = false) -> void:
 	if hp <= 0.0:
 		return
 	GameManager.record_damage(amount)
 	_spawn_damage_number(amount, is_crit, "")
 	hp -= amount
+	# Hit flash
+	modulate = Color(2.4, 2.4, 2.4)
+	var tw := create_tween()
+	tw.tween_property(self, "modulate", Color.WHITE, 0.09)
 	if hp <= 0.0:
 		_die()
 
@@ -129,22 +146,6 @@ func _spawn_damage_number(amount: float, is_crit: bool, element: String) -> void
 	dn.global_position = global_position + Vector2(randf_range(-10.0, 10.0), -14.0)
 	dn.init(amount, is_crit, element)
 
-func _update_visual() -> void:
-	if is_frozen:
-		modulate = Color(0.55, 0.88, 1.0)
-	elif cold_stacks > 0:
-		modulate = Color(0.72, 0.88, 1.0)
-	elif poison_stacks > 0 and burn_stacks > 0:
-		modulate = Color(0.78, 0.88, 0.25)
-	elif poison_stacks > 0:
-		modulate = Color(0.5, 1.0, 0.45)
-	elif burn_stacks > 0:
-		modulate = Color(1.0, 0.52, 0.15)
-	elif bleed_stacks > 0:
-		modulate = Color(1.0, 0.28, 0.28)
-	else:
-		modulate = Color.WHITE
-
 func _die() -> void:
 	GameManager.record_kill()
 	GameManager.add_xp(xp_value)
@@ -161,3 +162,101 @@ func _die() -> void:
 				GameManager.add_timer(mod.timer_per_kill)
 		atk.kill_hooks(self, final_stats)
 	queue_free()
+
+# ── Frostlight entity drawing ─────────────────────────────────────────
+
+func _draw() -> void:
+	# Ground shadow ellipse
+	var sh_pts := PackedVector2Array()
+	var sh_cols := PackedColorArray()
+	for i in 14:
+		var a := i * TAU / 14.0
+		sh_pts.append(Vector2(cos(a) * 10.0, 10.0 + sin(a) * 2.5))
+		sh_cols.append(_SHADOW_C)
+	draw_polygon(sh_pts, sh_cols)
+
+	# Gradient values for each facet
+	var g_dt := _C_BASE.lerp(_C_DARK, 0.45)   # dark facet top
+
+	# Dark facet (left)
+	var pts_d := PackedVector2Array([_SHARD_TOP, _SHARD_LEFT, _SHARD_BOT])
+	draw_polygon(pts_d, _sfc(pts_d, g_dt, _C_DARK))
+
+	# Light facet (right)
+	var pts_l := PackedVector2Array([_SHARD_TOP, _SHARD_RIGHT, _SHARD_BOT])
+	draw_polygon(pts_l, _sfc(pts_l, _C_LIGHT, _C_BASE))
+
+	# Element aura (soft halo ring)
+	var aura := _aura_color()
+	if aura.a > 0.0:
+		var aura_fill := aura
+		aura_fill.a = 0.18
+		var ap := PackedVector2Array()
+		var ac := PackedColorArray()
+		for i in 18:
+			var angle := i * TAU / 18.0
+			ap.append(Vector2(cos(angle) * 19.0, -8.0 + sin(angle) * 23.0))
+			ac.append(aura_fill)
+		draw_polygon(ap, ac)
+		# Facet outline
+		draw_polyline(PackedVector2Array([
+			_SHARD_TOP, _SHARD_LEFT, _SHARD_BOT, _SHARD_RIGHT, _SHARD_TOP
+		]), aura, 1.4, true)
+
+	# Core gem
+	var core_pts := PackedVector2Array([
+		Vector2(0.0, -13.0), Vector2(4.0, -8.0), Vector2(0.0, -3.0), Vector2(-4.0, -8.0)
+	])
+	var core_cols := PackedColorArray()
+	for i in 4:
+		core_cols.append(Color(1.0, 1.0, 1.0, 0.75))
+	draw_polygon(core_pts, core_cols)
+
+	# Status pips
+	_draw_pips()
+
+func _sfc(pts: PackedVector2Array, c_top: Color, c_bot: Color) -> PackedColorArray:
+	var cols := PackedColorArray()
+	for v in pts:
+		var t := clampf((v.y - _SY_TOP) / (_SY_BOT - _SY_TOP), 0.0, 1.0)
+		cols.append(c_top.lerp(c_bot, t))
+	return cols
+
+func _aura_color() -> Color:
+	if is_frozen:
+		return Color("#9AD6EE")
+	if cold_stacks > 0:
+		return Color("#3F9BD6")
+	if poison_stacks > 0 and burn_stacks > 0:
+		return Color("#BBC04A")
+	if burn_stacks > 0:
+		return Color("#E8784E")
+	if poison_stacks > 0:
+		return Color("#66A83F")
+	if bleed_stacks > 0:
+		return Color("#D94F6E")
+	return Color(0.0, 0.0, 0.0, 0.0)
+
+func _draw_pips() -> void:
+	var pip_col := _aura_color()
+	if pip_col.a == 0.0:
+		return
+	var count := 0
+	if is_frozen:
+		count = mini(cold_stacks, 6)
+	elif cold_stacks > 0:
+		count = mini(cold_stacks, 6)
+	elif burn_stacks > 0 and poison_stacks > 0:
+		count = mini(burn_stacks + poison_stacks, 6)
+	elif burn_stacks > 0:
+		count = mini(burn_stacks, 6)
+	elif poison_stacks > 0:
+		count = mini(poison_stacks, 6)
+	elif bleed_stacks > 0:
+		count = mini(bleed_stacks, 6)
+	if count == 0:
+		return
+	pip_col.a = 1.0
+	var start_x := -(count - 1) * 3.0
+	for i in count:
+		draw_circle(Vector2(start_x + i * 6.0, -29.0), 2.5, pip_col)

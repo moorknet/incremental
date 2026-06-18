@@ -8,7 +8,7 @@ process_mode = 3
 layer = 15
 
 [node name="Overlay" type="ColorRect" parent="."]
-color = Color(0.0, 0.0, 0.0, 0.88)
+color = Color(0.110, 0.157, 0.212, 0.50)
 anchor_right = 1.0
 anchor_bottom = 1.0
 
@@ -18,12 +18,12 @@ anchor_right = 0.5
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = -310.0
-offset_top = -252.0
+offset_top = -255.0
 offset_right = 310.0
-offset_bottom = 252.0
+offset_bottom = 255.0
 
 [node name="VBox" type="VBoxContainer" parent="MainPanel"]
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="Header" type="HBoxContainer" parent="MainPanel/VBox"]
 theme_override_constants/separation = 0
@@ -31,22 +31,24 @@ theme_override_constants/separation = 0
 [node name="TitleLabel" type="Label" parent="MainPanel/VBox/Header"]
 size_flags_horizontal = 3
 text = "META SHOP"
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.157, 0.192, 0.231, 1)
 
 [node name="CurrencyLabel" type="Label" parent="MainPanel/VBox/Header"]
 text = "⬡ 0"
 horizontal_alignment = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.118, 0.620, 0.518, 1)
 
 [node name="Sep1" type="HSeparator" parent="MainPanel/VBox"]
 
 [node name="Scroll" type="ScrollContainer" parent="MainPanel/VBox"]
-custom_minimum_size = Vector2(0.0, 336.0)
+custom_minimum_size = Vector2(0.0, 330.0)
 size_flags_vertical = 3
 
 [node name="UpgradeList" type="VBoxContainer" parent="MainPanel/VBox/Scroll"]
 size_flags_horizontal = 3
-theme_override_constants/separation = 2
+theme_override_constants/separation = 4
 
 [node name="Sep2" type="HSeparator" parent="MainPanel/VBox"]
 
@@ -54,9 +56,8 @@ theme_override_constants/separation = 2
 custom_minimum_size = Vector2(0.0, 30.0)
 text = "↺  Reset All Upgrades (refunds meta)"
 theme_override_font_sizes/font_size = 12
-modulate = Color(1.0, 0.55, 0.55, 1.0)
 
 [node name="StartRunButton" type="Button" parent="MainPanel/VBox"]
-custom_minimum_size = Vector2(0.0, 42.0)
+custom_minimum_size = Vector2(0.0, 44.0)
 text = "Start Run"
 theme_override_font_sizes/font_size = 18

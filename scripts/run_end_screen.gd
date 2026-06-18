@@ -2,13 +2,13 @@ extends CanvasLayer
 
 signal shop_requested
 
-@onready var time_label: Label = $Panel/TimeLabel
-@onready var level_label: Label = $Panel/LevelLabel
-@onready var kills_label: Label = $Panel/KillsLabel
-@onready var damage_label: Label = $Panel/DamageLabel
-@onready var meta_label: Label = $Panel/MetaLabel
-@onready var total_meta_label: Label = $Panel/TotalMetaLabel
-@onready var shop_btn: Button = $Panel/PlayAgainButton
+@onready var time_label: Label       = $Panel/VBox/TimeLabel
+@onready var level_label: Label      = $Panel/VBox/LevelLabel
+@onready var kills_label: Label      = $Panel/VBox/KillsLabel
+@onready var damage_label: Label     = $Panel/VBox/DamageLabel
+@onready var meta_label: Label       = $Panel/VBox/MetaLabel
+@onready var total_meta_label: Label = $Panel/VBox/TotalMetaLabel
+@onready var shop_btn: Button        = $Panel/VBox/PlayAgainButton
 
 func _ready() -> void:
 	visible = false

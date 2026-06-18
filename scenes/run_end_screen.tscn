@@ -1,6 +1,30 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/run_end_screen.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+content_margin_left = 32.0
+content_margin_top = 28.0
+content_margin_right = 32.0
+content_margin_bottom = 28.0
+shadow_color = Color(0.110, 0.165, 0.243, 0.22)
+shadow_size = 22
+shadow_offset = Vector2(0, 10)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+bg_color = Color(0.118, 0.620, 0.518, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.118, 0.620, 0.518, 0.35)
+shadow_size = 10
+shadow_offset = Vector2(0, 4)
 
 [node name="RunEndScreen" type="CanvasLayer"]
 script = ExtResource("1")
@@ -8,59 +32,69 @@ process_mode = 3
 layer = 20
 
 [node name="Overlay" type="ColorRect" parent="."]
-color = Color(0.0, 0.0, 0.0, 0.82)
+color = Color(0.110, 0.157, 0.212, 0.50)
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="Panel" type="VBoxContainer" parent="."]
+[node name="Panel" type="PanelContainer" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = -220.0
-offset_top = -195.0
-offset_right = 220.0
-offset_bottom = 195.0
-alignment = 1
-theme_override_constants/separation = 14
+offset_left = -230.0
+offset_top = -210.0
+offset_right = 230.0
+offset_bottom = 210.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="TitleLabel" type="Label" parent="Panel"]
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="Panel/VBox"]
 text = "RUN OVER"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 34
+theme_override_colors/font_color = Color(0.851, 0.310, 0.431, 1)
 
-[node name="TimeLabel" type="Label" parent="Panel"]
+[node name="TimeLabel" type="Label" parent="Panel/VBox"]
 text = "Time  0:00.0"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.310, 0.369, 0.424, 1)
 
-[node name="LevelLabel" type="Label" parent="Panel"]
+[node name="LevelLabel" type="Label" parent="Panel/VBox"]
 text = "Level Reached  1"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.310, 0.369, 0.424, 1)
 
-[node name="KillsLabel" type="Label" parent="Panel"]
+[node name="KillsLabel" type="Label" parent="Panel/VBox"]
 text = "Kills  0"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.310, 0.369, 0.424, 1)
 
-[node name="DamageLabel" type="Label" parent="Panel"]
+[node name="DamageLabel" type="Label" parent="Panel/VBox"]
 text = "Damage Dealt  0"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.310, 0.369, 0.424, 1)
 
-[node name="MetaLabel" type="Label" parent="Panel"]
+[node name="MetaLabel" type="Label" parent="Panel/VBox"]
 text = "Meta Earned  +0"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.157, 0.620, 0.518, 1)
 
-[node name="TotalMetaLabel" type="Label" parent="Panel"]
+[node name="TotalMetaLabel" type="Label" parent="Panel/VBox"]
 text = "Total Meta  0"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 14
-modulate = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/font_color = Color(0.494, 0.580, 0.604, 1)
 
-[node name="PlayAgainButton" type="Button" parent="Panel"]
+[node name="PlayAgainButton" type="Button" parent="Panel/VBox"]
 custom_minimum_size = Vector2(200.0, 44.0)
-text = "Play Again"
-theme_override_font_sizes/font_size = 20
+text = "Visit Shop  ›"
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_colors/font_color = Color(0.027, 0.133, 0.106, 1)

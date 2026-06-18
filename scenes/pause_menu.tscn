@@ -1,6 +1,42 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/pause_menu.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+content_margin_left = 28.0
+content_margin_top = 24.0
+content_margin_right = 28.0
+content_margin_bottom = 24.0
+shadow_color = Color(0.110, 0.165, 0.243, 0.22)
+shadow_size = 20
+shadow_offset = Vector2(0, 8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_primary"]
+bg_color = Color(0.118, 0.620, 0.518, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.118, 0.620, 0.518, 0.30)
+shadow_size = 8
+shadow_offset = Vector2(0, 3)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ghost"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.773, 0.310, 0.431, 0.60)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="PauseMenu" type="CanvasLayer"]
 script = ExtResource("1")
@@ -8,7 +44,7 @@ process_mode = 3
 layer = 30
 
 [node name="Overlay" type="ColorRect" parent="."]
-color = Color(0.0, 0.0, 0.0, 0.6)
+color = Color(0.110, 0.157, 0.212, 0.45)
 anchor_right = 1.0
 anchor_bottom = 1.0
 
@@ -17,25 +53,31 @@ anchor_left = 0.5
 anchor_right = 0.5
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = -140.0
-offset_right = 140.0
-offset_top = -110.0
-offset_bottom = 110.0
+offset_left = -150.0
+offset_right = 150.0
+offset_top = -120.0
+offset_bottom = 120.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
 [node name="VBox" type="VBoxContainer" parent="Panel"]
-theme_override_constants/separation = 16
+theme_override_constants/separation = 14
 
 [node name="TitleLabel" type="Label" parent="Panel/VBox"]
 text = "PAUSED"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.157, 0.192, 0.231, 1)
 
 [node name="ResumeButton" type="Button" parent="Panel/VBox"]
 custom_minimum_size = Vector2(0, 44)
 text = "Resume"
 theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_primary")
+theme_override_colors/font_color = Color(0.027, 0.133, 0.106, 1)
 
 [node name="AbandonButton" type="Button" parent="Panel/VBox"]
 custom_minimum_size = Vector2(0, 44)
 text = "Abandon Run  →  Shop"
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_ghost")
+theme_override_colors/font_color = Color(0.851, 0.310, 0.431, 1)
