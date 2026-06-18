@@ -9,12 +9,6 @@ func _draw() -> void:
 		PackedColorArray([top, top, bot, bot])
 	)
 
-	# Soft sun disc (upper-right ambient glow)
-	var sun := Vector2(700, 60)
-	for i in 6:
-		var r := float(6 - i)
-		draw_circle(sun, 16 + r * 14, Color(0.875, 0.640, 0.235, 0.03 * r))
-
 	# Decorative ridge silhouettes at the bottom
 	_draw_ridge(PackedVector2Array([
 		Vector2(0, 500), Vector2(0, 395), Vector2(180, 360), Vector2(390, 378),
