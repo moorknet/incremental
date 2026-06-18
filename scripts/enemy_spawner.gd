@@ -29,20 +29,23 @@ func _spawn_wave() -> void:
 	GameManager.wave_changed.emit(_wave)
 
 	var count := 1 + int(_wave / 3)
-	var hp_scale := 1.0 + (_wave - 1) * 0.15
-	var speed_scale := 1.0 + (_wave - 1) * 0.025
-	var xp_bonus := int((_wave - 1) * 0.4)      # +0.4 XP per wave
-	var meta_bonus := int((_wave - 1) * 0.15)   # +0.15 meta per wave
+	var mob_lvl: int = GameManager.mob_level
+	var hp_scale := (1.0 + (_wave - 1) * 0.15) * (1.0 + mob_lvl * 0.5)
+	var speed_scale := (1.0 + (_wave - 1) * 0.025) * (1.0 + mob_lvl * 0.05)
+	var contact_dmg := 5.0 + (_wave - 1) * 0.3 + mob_lvl * 2.0
+	var xp_bonus := int((_wave - 1) * 0.4)
+	var meta_bonus := int((_wave - 1) * 0.15)
 
 	for i in count:
-		_spawn_one(hp_scale, speed_scale, xp_bonus, meta_bonus)
+		_spawn_one(hp_scale, speed_scale, contact_dmg, xp_bonus, meta_bonus)
 
-func _spawn_one(hp_scale: float, speed_scale: float, xp_bonus: int, meta_bonus: int) -> void:
+func _spawn_one(hp_scale: float, speed_scale: float, contact_dmg: float, xp_bonus: int, meta_bonus: int) -> void:
 	var e: Enemy = ENEMY_SCENE.instantiate()
 	_enemies_node.add_child(e)
 	e.hp *= hp_scale
 	e.move_speed *= speed_scale
 	e._base_move_speed = e.move_speed
+	e.contact_damage = contact_dmg
 	e.xp_value += xp_bonus
 	e.meta_value = max(1, e.meta_value + meta_bonus)
 	e.global_position = _random_edge_position()

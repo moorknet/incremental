@@ -4,6 +4,7 @@ extends CanvasLayer
 @onready var wave_label: Label = $Control/WaveLabel
 @onready var level_label: Label = $Control/LeftStats/LevelLabel
 @onready var xp_bar: ProgressBar = $Control/LeftStats/XPBar
+@onready var hp_bar: ProgressBar = $Control/LeftStats/HPBar
 @onready var meta_label: Label = $Control/RightStats/MetaLabel
 @onready var kills_label: Label = $Control/RightStats/KillsLabel
 @onready var damage_label: Label = $Control/RightStats/DamageLabel
@@ -15,7 +16,8 @@ signal pause_requested
 func _ready() -> void:
 	pause_button.pressed.connect(func(): pause_requested.emit())
 	GameManager.timer_changed.connect(_on_timer_changed)
-	GameManager.wave_changed.connect(_on_wave_changed)
+	GameManager.mob_level_changed.connect(_on_mob_level_changed)
+	GameManager.player_hp_changed.connect(_on_player_hp_changed)
 	GameManager.xp_changed.connect(_on_xp_changed)
 	GameManager.level_up.connect(_on_level_up)
 	GameManager.meta_changed.connect(_on_meta_changed)
@@ -23,18 +25,22 @@ func _ready() -> void:
 	GameManager.damage_updated.connect(_on_damage_updated)
 	GameManager.modifier_added.connect(_refresh_mod_list)
 
-func _on_wave_changed(w: int) -> void:
-	wave_label.text = "WAVE %d" % w
+func _on_mob_level_changed(lvl: int) -> void:
+	wave_label.text = "MOB LV. %d" % lvl
 
 func _on_timer_changed(seconds: float) -> void:
 	var s := maxf(seconds, 0.0)
 	timer_label.text = "%d.%d" % [int(s), int(fmod(s, 1.0) * 10)]
-	if s < 10.0:
+	if s < 8.0:
 		timer_label.modulate = Color(1.0, 0.2, 0.2)
-	elif s < 20.0:
+	elif s < 15.0:
 		timer_label.modulate = Color(1.0, 0.8, 0.1)
 	else:
 		timer_label.modulate = Color.WHITE
+
+func _on_player_hp_changed(current: float, maximum: float) -> void:
+	hp_bar.max_value = maximum
+	hp_bar.value = current
 
 func _on_xp_changed(current: int, needed: int) -> void:
 	xp_bar.max_value = needed

@@ -13,7 +13,7 @@ static func get_pool() -> Array[Modifier]:
 	pool.append(_make(&"bounce",   "Bounce",   "Ricochet.\nProjectile bounces to next enemy.", 2, 1.0,  1.0,  {"bounce": 1.0},                     [&"count"]))
 	pool.append(_make_chain())
 	pool.append(_make(&"greed",    "Greed",    "More spoils.\n+1 meta per kill",          1, 0.0,  0.0,  {},                                  [&"economy"], 1, 0.0))
-	pool.append(_make(&"overtime", "Overtime", "Kills fuel the clock.\n+{v}s per kill",   2, 2.0,  5.0,  {},                                  [&"economy", &"timer"], 0, -1.0))
+	pool.append(_make(&"overtime", "Overtime", "Kills delay escalation.\n+{v}s per kill",  2, 2.0,  5.0,  {},                                  [&"economy", &"timer"], 0, -1.0))
 	pool.append(_make_frenzy())
 
 	# --- Poison ---

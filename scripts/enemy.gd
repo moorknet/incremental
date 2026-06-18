@@ -9,6 +9,7 @@ var move_speed: float = 60.0
 var _base_move_speed: float = 60.0
 var xp_value: int = 5
 var meta_value: int = 1
+var contact_damage: float = 5.0
 var _target_pos: Vector2
 
 # Elemental state
@@ -32,7 +33,7 @@ func _ready() -> void:
 func init(target_position: Vector2) -> void:
 	_target_pos = target_position
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if not GameManager.run_active:
 		return
 	if is_frozen:
@@ -41,6 +42,8 @@ func _physics_process(_delta: float) -> void:
 		var dir := (_target_pos - global_position).normalized()
 		velocity = dir * move_speed
 	move_and_slide()
+	if global_position.distance_to(_target_pos) < 30.0:
+		GameManager.damage_player(contact_damage * delta)
 
 func _process(delta: float) -> void:
 	if not GameManager.run_active or hp <= 0.0:
